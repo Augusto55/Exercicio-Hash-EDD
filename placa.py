@@ -18,50 +18,57 @@ class Veiculo:
         return self
 
     def inserir(self, marca, modelo, proprietario, placa):
-        veiculo = self.criar_veiculo(marca, modelo, proprietario, placa)
+        self.veiculo = self.criar_veiculo(marca, modelo, proprietario, placa)
 
         placa_formatada = self.formatar(placa)
         indice = self.funcao_hash(placa_formatada)
 
-        print(indice)
-
-        if self.vetor[indice] == None:
-            self.vetor[indice] = [str(veiculo)]
-            self._tamanho += 1
-        else:
-            try:
-              self.vetor[indice].index(str(veiculo))
-            except ValueError:
-              self.vetor[indice].append(str(veiculo))
-              self._tamanho += 1
+        try:
+            if self.vetor[indice] == None:
+                self.vetor[indice] = [str(self.veiculo)]
+                self._tamanho += 1
+            else:
+                try:
+                    self.vetor[indice].index(str(self.veiculo))
+                except ValueError:
+                    self.vetor[indice].append(str(self.veiculo))
+                    self._tamanho += 1
+        except TypeError:
+            print("Insira uma placa válida")
 
     def funcao_hash(self, placa):
         placa1 = placa[0:3]
-        placa2 = str(placa1)
-
-        if placa2 >= "aaa" and placa2 <= "bez":
+        
+        if placa1 >= "aaa" and placa1 <= "bez":
             return 0
-        elif placa2 >= "gkj" and placa2 <= "hok":
+        elif placa1 >= "gkj" and placa1 <= "hok":
             return 1
-        elif placa2 >= "iaq" and placa2 <="jdo":
+        elif placa1 >= "iaq" and placa1 <="jdo":
             return 2
-        elif placa2 >= "jks" and placa2 <= "jsz":
+        elif placa1 >= "jks" and placa1 <= "jsz":
             return 3
     
     def remover(self, placa):
-        placa = self.formatar(placa)
-        indice = self.funcao_hash(placa)
-        
+        placa_formatada = self.formatar(placa)
+        indice = self.funcao_hash(placa_formatada)
+        bucket = ""
+
         try:
-          ind_placa = self.vetor[indice].index(placa)
-          self.vetor[indice].pop(ind_placa)
-        except ValueError:
-          pass
+            bucket = self.vetor[indice]
+        except TypeError:
+            print("Erro: Placa não foi encontrada")
+        
+        for i in bucket:
+            if(placa in i):
+                ind_placa = bucket.index(i)
+                self.vetor[indice].pop(ind_placa)
+                self._tamanho -= 1
+
         
 carro = Veiculo()
-carro.inserir("Audi", "A4", "Augusto", "JKY9001")
-carro.inserir("Mercedez", "C200", "Augusto", "JSY9001")
-print("deu certo")
+carro.inserir("Audi", "A4", "Augusto", "JKS9001")
+carro.inserir("Mercedez", "C200", "Augusto", "JSO9001")
+carro.remover("JKS9001")
 print(carro.vetor)
 
 
