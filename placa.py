@@ -1,42 +1,51 @@
 class Veiculo:
-    def __init__(self, marca, modelo, proprietario):
-        self.marca = marca
-        self.modelo = modelo
-        self.proprietario = proprietario
+    def __init__(self):
         self.vetor = [None] * 4
+        self._tamanho = 0
     def __str__(self):
-        return '{} {} {}'.format(self.marca, self.modelo, self.proprietario)
+        return '{}, {}, {}, {}'.format(self.marca, self.modelo, self.proprietario, self.placa)
     def __repr__(self):
-        return '{} {} {}'.format(self.marca, self.modelo, self.proprietario)
+        return '{}, {}, {}, {}'.format(self.marca, self.modelo, self.proprietario, self.placa)
     
-    def converter(self):
-        lista = [self.marca, self.modelo, self.proprietario, self.placa]
-        return lista
-
     def formatar(self, placa):
         return placa.lower()
 
-    def inserir(self, placa):
-        placa = self.formatar(placa)
-        indice = self.funcao_hash(placa)
+    def criar_veiculo(self, marca, modelo, proprietario, placa):
+        self.marca = marca
+        self.modelo = modelo
+        self.proprietario = proprietario
+        self.placa = placa
+        return self
+
+    def inserir(self, marca, modelo, proprietario, placa):
+        veiculo = self.criar_veiculo(marca, modelo, proprietario, placa)
+
+        placa_formatada = self.formatar(placa)
+        indice = self.funcao_hash(placa_formatada)
+
+        print(indice)
 
         if self.vetor[indice] == None:
-            self.vetor[indice] = [placa]
+            self.vetor[indice] = [str(veiculo)]
+            self._tamanho += 1
         else:
             try:
-              self.vetor[indice].index(placa)
+              self.vetor[indice].index(str(veiculo))
             except ValueError:
-              self.vetor[indice].append(placa)
+              self.vetor[indice].append(str(veiculo))
+              self._tamanho += 1
 
     def funcao_hash(self, placa):
-        placa2 = placa[0:2]
-        if placa2 == "aa" or placa2 == "be":
+        placa1 = placa[0:3]
+        placa2 = str(placa1)
+
+        if placa2 >= "aaa" and placa2 <= "bez":
             return 0
-        elif placa2 == "gk" or placa2 == "ho":
+        elif placa2 >= "gkj" and placa2 <= "hok":
             return 1
-        elif placa2 == "ia" or placa2 == "jd":
+        elif placa2 >= "iaq" and placa2 <="jdo":
             return 2
-        elif placa2 == "jk" or placa2 == "js":
+        elif placa2 >= "jks" and placa2 <= "jsz":
             return 3
     
     def remover(self, placa):
@@ -49,13 +58,12 @@ class Veiculo:
         except ValueError:
           pass
         
+carro = Veiculo()
+carro.inserir("Audi", "A4", "Augusto", "JKY9001")
+carro.inserir("Mercedez", "C200", "Augusto", "JSY9001")
+print("deu certo")
+print(carro.vetor)
 
-veiculo = Veiculo("Audi", "A4", "Augusto")
-veiculo.inserir("JKI 7987")
-print(veiculo.vetor)
-veiculo.remover("JKI 7987")
-print(veiculo.vetor)
-    
 
         
 
