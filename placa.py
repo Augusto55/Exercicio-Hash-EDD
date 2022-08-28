@@ -22,19 +22,42 @@ class Veiculo:
 
         placa_formatada = self.formatar(placa)
         indice = self.funcao_hash(placa_formatada)
+        bucket = ""
+        boolean = ""
 
         try:
-            if self.vetor[indice] == None:
-                self.vetor[indice] = [str(self.veiculo)]
-                self._tamanho += 1
-            else:
-                try:
-                    self.vetor[indice].index(str(self.veiculo))
-                except ValueError:
-                    self.vetor[indice].append(str(self.veiculo))
-                    self._tamanho += 1
+            bucket = self.vetor[indice]
+            boolean = self.contem_boolean(bucket, placa)
         except TypeError:
-            print("Insira uma placa válida")
+            pass
+
+
+        if boolean:
+            print("Erro: Placa já está sendo utilizada")
+        else:
+            try:
+                if self.vetor[indice] == None:
+                    self.vetor[indice] = [str(self.veiculo)]
+                    self._tamanho += 1
+                else:
+                    try:
+                        self.vetor[indice].index(str(self.veiculo))
+                    except ValueError:
+                        self.vetor[indice].append(str(self.veiculo))
+                        self._tamanho += 1
+            except TypeError:
+                print("Insira uma placa válida")
+    
+    def contem(self, bucket, placa):
+         for i in bucket:
+            if(placa in i):
+                return i
+    
+    def contem_boolean(self, bucket, placa):
+         for i in bucket:
+            if(placa in i):
+                return i
+
 
     def funcao_hash(self, placa):
         placa1 = placa[0:3]
@@ -56,20 +79,61 @@ class Veiculo:
         try:
             bucket = self.vetor[indice]
         except TypeError:
-            print("Erro: Placa não foi encontrada")
+            print("Erro: Registro não foi encontrado")
         
         for i in bucket:
             if(placa in i):
                 ind_placa = bucket.index(i)
                 self.vetor[indice].pop(ind_placa)
                 self._tamanho -= 1
+    
+    def buscar_por_placa(self, placa):
+        placa_formatada = self.formatar(placa)
+        indice = self.funcao_hash(placa_formatada)
+        bucket = self.vetor[indice]
+        i = self.contem(bucket, placa)
 
-        
+        try:
+            ind_placa = bucket.index(i)
+            print("Registro encontrado: ", self.vetor[indice][ind_placa])
+        except ValueError:
+            print("Registro não encontrado")
+
+    def mostrar_registros(self):
+        print(self.vetor)
+
+    def mostrar_registros_parametros(self, placa, *args):
+        placa_formatada = self.formatar(placa)
+        indice = self.funcao_hash(placa_formatada)
+        bucket = self.vetor[indice]
+        i = self.contem(bucket, placa)
+        lista = []
+        lista_final = []
+
+        try:
+            ind_placa = bucket.index(i)
+            lista = self.vetor[indice][ind_placa]
+            lista_formatada = lista.split(',')
+            if "marca" in args:
+                lista_final.append(lista_formatada[0])
+            if "modelo" in args:
+                lista_final.append(lista_formatada[1])
+            print("Registro encontrado com os parametros: ", lista_final )
+        except ValueError:
+            print("Registro não encontrado")
+
+    
+
+    
 carro = Veiculo()
 carro.inserir("Audi", "A4", "Augusto", "JKS9001")
 carro.inserir("Mercedez", "C200", "Augusto", "JSO9001")
-carro.remover("JKS9001")
-print(carro.vetor)
+carro.inserir("Fiat", "Uno", "Augusto", "AAZ1234")
+# carro.inserir("Renault", "Kwid", "Pai careca do GS", "JSO9001")
+# carro.remover("JKS9001")
+#carro.buscar_por_placa("JSO9001")
+carro.mostrar_registros_parametros("JSO9001", "marca", "modelo")
+carro.mostrar_registros()
 
 
         
