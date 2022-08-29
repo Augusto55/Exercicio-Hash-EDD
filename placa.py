@@ -101,21 +101,22 @@ class Veiculo:
 
         try:
             bucket = self.vetor[indice]
+            for i in bucket:
+                if(placa in i):
+                    ind_placa = bucket.index(i)
+                    self.vetor[indice].pop(ind_placa)
+                    self._tamanho -= 1
         except TypeError:
             print("Erro: Registro não foi encontrado")
         
-        for i in bucket:
-            if(placa in i):
-                ind_placa = bucket.index(i)
-                self.vetor[indice].pop(ind_placa)
-                self._tamanho -= 1
     
     def buscar_por_placa(self, placa):
         placa_formatada = self.formatar(placa)
         indice = self.funcao_hash(placa_formatada)
-        bucket = self.vetor[indice]
+        bucket = ""
 
         try:
+            bucket = self.vetor[indice]
             i = self.contem(bucket, placa)
             ind_placa = bucket.index(i)
             print("Registro encontrado: ", self.vetor[indice][ind_placa])
@@ -180,11 +181,6 @@ class Veiculo:
 
     
 carro = Veiculo()
-
-carro.inserir("Audi", "A4", "JKS9001", "", "", "", "", "", "", "", "", "", "", "", "", "", "")
-carro.inserir("Mercedez", "C200", "JSO9001", "", "", "", "", "", "", "", "", "", "", "", "", "", "")
-carro.inserir("Fiat", "Uno", "AAZ1234", "", "", "", "", "", "", "", "", "", "", "", "", "", "")
-
 
 while True:    
     try:
